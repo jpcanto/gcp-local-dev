@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  pubsub:
+    build:
+      context: ./pubsub-emulator
+    ports:
+      - "8085:8085"
+    environment:
+      PUBSUB_PROJECT_ID: local-gcp-project
+    networks:
+      - gcp-local
+
+  
+  fake-gcs:
+    image: fsouza/fake-gcs-server:latest
+    command: -scheme http -port 4443 -data /data
+    ports:
+      - "4443:4443"
+    volumes:
+      - ./fake-gcs/data:/data
+    networks:
+      - gcp-local
+
+
+networks:
+  gcp-local:
+    driver: bridge
