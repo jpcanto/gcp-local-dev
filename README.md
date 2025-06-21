@@ -220,6 +220,6 @@ curl http://localhost:4443/storage/v1/b/local-bucket/o/meuarquivo.txt?alt=media
 
 - [Docker](https://www.docker.com/)
 - [Docker Compose](https://docs.docker.com/compose/)
-- [Google Cloud SDK](https://cloud.google.com/sdk) (opcional, para interagir com o emulador Pub/Sub via `gcloud`)
+- [Google Cloud SDK](https://cloud.google.com/sdk/docs/install) (opcional, para interagir com o emulador Pub/Sub via `gcloud`)
 - `curl` (para testar endpoints REST, como Fake GCS e API Gateway)
 - Terminal Bash, Zsh, ou outro shell compatível
