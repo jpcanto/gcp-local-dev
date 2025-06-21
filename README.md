@@ -90,6 +90,102 @@ gcloud pubsub subscriptions pull test-sub --auto-ack --project=local-gcp-project
 
 Nota: certifique-se de que o SDK do GCP esteja instalado e autenticado localmente.
 
+### Exemplos de uso por linguagem
+
+<details>
+<summary>Node.js</summary>
+
+### Instalação da dependência
+
+```bash
+pnpm install @google-cloud/pubsub
+```
+
+```javascript
+// Exemplo de código para publicar uma mensagem em Node.js
+import { PubSub } from '@google-cloud/pubsub';
+
+const pubsub = new PubSub({
+  projectId: 'local-gcp-project',
+  apiEndpoint: 'localhost:8085',
+});
+
+async function publishMessage(topicName, data) {
+  try {
+    const payload =
+      typeof data === 'string' ? data : JSON.stringify(data);
+
+    const dataBuffer = Buffer.from(payload);
+
+    const messageId = await pubsub
+      .topic(topicName)
+      .publishMessage({ data: dataBuffer });
+
+    console.log(`Mensagem publicada no tópico "${topicName}" com ID: ${messageId}`);
+  } catch (error) {
+    console.error('Erro ao publicar mensagem:', error);
+  }
+}
+
+publishMessage('test-topic', {
+  userId: 42,
+  event: 'signup',
+  timestamp: new Date().toISOString(),
+});
+```
+
+</details>
+
+<details>
+<summary>Python</summary>
+
+### Instalação da dependência
+
+```bash
+pip install google-cloud-pubsub
+```
+
+```python
+from google.cloud import pubsub_v1
+import json
+import os
+
+# Configura o ambiente para usar o emulador local
+os.environ["PUBSUB_EMULATOR_HOST"] = "localhost:8085"
+os.environ["GOOGLE_CLOUD_PROJECT"] = "local-gcp-project"
+
+# Inicializa o cliente
+publisher = pubsub_v1.PublisherClient()
+project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
+
+def publish_message(topic_name: str, data):
+    """Publica uma mensagem no Pub/Sub local"""
+    topic_path = publisher.topic_path(project_id, topic_name)
+
+    # Se o dado for dict, converte para JSON
+    if isinstance(data, dict):
+        data = json.dumps(data)
+
+    # Codifica como bytes
+    data_bytes = data.encode("utf-8")
+
+    try:
+        future = publisher.publish(topic_path, data=data_bytes)
+        message_id = future.result()
+        print(f"Mensagem publicada com ID: {message_id}")
+    except Exception as e:
+        print(f"Erro ao publicar mensagem: {e}")
+
+publish_message("test-topic", {
+    "user_id": 123,
+    "action": "purchase",
+    "amount": 59.90,
+    "timestamp": "2025-06-21T12:34:56Z"
+})
+```
+
+</details>
+
 ---
 
 ## Fake GCS Server
