@@ -60,9 +60,25 @@ export PUBSUB_EMULATOR_HOST=localhost:8085
 export GOOGLE_CLOUD_PROJECT=local-gcp-project
 ```
 
+### Configurando o projeto gcloud localmente
+
+Para que a ferramenta `gcloud` funcione corretamente com o emulador, ela precisa saber qual ID de projeto usar, mesmo que seja um projeto fictício. Você pode configurar isso para sua CLI com o seguinte comando.
+
+Isso **não requer uma conta Google** e **não faz nenhuma chamada para a nuvem**. A configuração é puramente local.
+
+```bash
+gcloud config set project local-gcp-project
+```
+
+Com isso e a variável de ambiente `PUBSUB_EMULATOR_HOST` definidos, o `gcloud` direcionará todos os comandos para o seu emulador local.
+
 ---
 
 ## Pub/Sub Emulator
+
+Os comandos abaixo permitem interagir com o emulador Pub/Sub usando a CLI `gcloud`.
+
+> **Nota:** É necessário ter o [Google Cloud SDK](https://cloud.google.com/sdk/docs/install) instalado para usar os comandos `gcloud`.
 
 ### Criar tópico
 
