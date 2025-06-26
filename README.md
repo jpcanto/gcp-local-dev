@@ -265,6 +265,79 @@ gcloud beta bigquery tables insert test_dataset.test_table --project=local-gcp-p
 gcloud beta bigquery query 'SELECT * FROM test_dataset.test_table' --project=local-gcp-project --endpoint=http://localhost:9050
 ```
 
+### Exemplos de uso por linguagem
+
+<details>
+<summary>Node.js</summary>
+
+### Instalação da dependência
+
+```bash
+pnpm install @google-cloud/bigquery
+```
+
+```javascript
+import { BigQuery } from '@google-cloud/bigquery';
+
+const bigquery = new BigQuery({
+  projectId: 'local-gcp-project',
+  apiEndpoint: 'http://localhost:9050',
+});
+
+async function queryBigQuery(sqlQuery) {
+  try {
+    const [job] = await bigquery.createQueryJob({
+      query: sqlQuery,
+      location: 'US',
+    });
+    const [rows] = await job.getQueryResults();
+    console.log('Resultados:', rows);
+  } catch (error) {
+    console.error('Erro ao consultar BigQuery:', error);
+  }
+}
+
+queryBigQuery('SELECT * FROM `test_dataset.test_table`');
+```
+
+</details>
+
+<details>
+<summary>Python</summary>
+
+### Instalação da dependência
+
+```bash
+pip install google-cloud-bigquery
+```
+
+```python
+from google.cloud import bigquery
+import os
+
+os.environ["BIGQUERY_EMULATOR_HOST"] = "localhost:9050"
+os.environ["GOOGLE_CLOUD_PROJECT"] = "local-gcp-project"
+
+client = bigquery.Client(
+    project=os.environ["GOOGLE_CLOUD_PROJECT"],
+    location="US"
+)
+
+def query_bigquery(sql_query: str):
+    """Consulta dados no BigQuery emulado"""
+    try:
+        query_job = client.query(sql_query)
+        results = query_job.result()
+        for row in results:
+            print(dict(row))
+    except Exception as e:
+        print(f"Erro ao consultar BigQuery: {e}")
+
+query_bigquery("SELECT * FROM `test_dataset.test_table`")
+```
+
+</details>
+
 ---
 
 ## 📦 Requisitos
