@@ -22,6 +22,7 @@ Essas ferramentas juntas permitem desenvolver e testar aplicações que usam Pub
 | ------------------ | -------------------- | ----------- |
 | Pub/Sub            | gcloud beta emulator | `8085`      |
 | Cloud Storage      | Fake GCS Server      | `4443`      |
+| BigQuery           | gcloud beta emulator | `9050`      |
 
 ---
 
@@ -48,6 +49,7 @@ docker-compose up --build -d
 | ------------------ | ------------------------------------ |
 | Pub/Sub            | http://localhost:8085                |
 | Cloud Storage      | http://localhost:4443/storage/v1/b   |
+| BigQuery           | http://localhost:9050                |
 
 ---
 
@@ -57,6 +59,7 @@ Antes de usar os emuladores, defina estas variáveis no terminal atual:
 
 ```bash
 export PUBSUB_EMULATOR_HOST=localhost:8085
+export BIGQUERY_EMULATOR_HOST=localhost:9050
 export GOOGLE_CLOUD_PROJECT=local-gcp-project
 ```
 
@@ -228,6 +231,38 @@ curl -X POST "http://localhost:4443/upload/storage/v1/b/local-bucket/o?uploadTyp
 
 ```bash
 curl http://localhost:4443/storage/v1/b/local-bucket/o/meuarquivo.txt?alt=media
+```
+
+---
+
+## BigQuery Emulator
+
+Os comandos abaixo permitem interagir com o emulador BigQuery usando a CLI `gcloud`.
+
+> **Nota:** É necessário ter o [Google Cloud SDK](https://cloud.google.com/sdk/docs/install) instalado para usar os comandos `gcloud`.
+
+### Criar dataset
+
+```bash
+gcloud beta bigquery datasets create test_dataset --project=local-gcp-project --endpoint=http://localhost:9050
+```
+
+### Criar tabela
+
+```bash
+gcloud beta bigquery tables create test_dataset.test_table --project=local-gcp-project --endpoint=http://localhost:9050
+```
+
+### Inserir dados
+
+```bash
+gcloud beta bigquery tables insert test_dataset.test_table --project=local-gcp-project --endpoint=http://localhost:9050 --row '{"id":1,"name":"Alice"}'
+```
+
+### Consultar dados
+
+```bash
+gcloud beta bigquery query 'SELECT * FROM test_dataset.test_table' --project=local-gcp-project --endpoint=http://localhost:9050
 ```
 
 ---

@@ -11,7 +11,6 @@ services:
     networks:
       - gcp-local
 
-  
   fake-gcs:
     image: fsouza/fake-gcs-server:latest
     command: -scheme http -port 4443 -data /data
@@ -22,6 +21,15 @@ services:
     networks:
       - gcp-local
 
+  bigquery:
+    build:
+      context: ./bigquery-emulator
+    ports:
+      - "9050:9050"
+    environment:
+      BIGQUERY_PROJECT_ID: local-gcp-project
+    networks:
+      - gcp-local
 
 networks:
   gcp-local:
